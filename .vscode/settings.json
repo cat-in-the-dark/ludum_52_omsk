@@ -1,0 +1,8 @@
+{
+  "eslint.enable": true,
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+}
