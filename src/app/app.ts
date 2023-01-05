@@ -12,14 +12,25 @@ function ready(fn: () => void) {
 async function run(ctx: CanvasRenderingContext2D) {
   const sm = await setupSounds();
   const game = new Game(ctx, sm);
-  let lastRender = 0;
-  function loop(timestamp: DOMHighResTimeStamp) {
-    const dt = timestamp - lastRender;
-    game.update(dt);
-    lastRender = timestamp;
-    window.requestAnimationFrame(loop);
+  const step = 1 / 60; // 60 FPS
+  let dt = 0;
+  let last = -1;
+  function loop(now: number) {
+    if (last < 0) {
+      last = now;
+    }
+    dt += Math.min(1, (now - last) / 1000);
+    last = now;
+
+    while (dt > step) {
+      dt -= step;
+      game.update(step);
+    }
+    game.draw(dt);
+
+    requestAnimationFrame(loop);
   }
-  window.requestAnimationFrame(loop);
+  requestAnimationFrame(loop);
 }
 
 async function main() {
@@ -28,8 +39,8 @@ async function main() {
     btn.style.display = "none";
   }
 
-  const canvas = document.querySelector("canvas"); 
-  const ctx = canvas?.getContext("2d"); 
+  const canvas = document.querySelector("canvas");
+  const ctx = canvas?.getContext("2d");
   if (canvas && ctx) {
     canvas.style.display = "block";
     run(ctx);
@@ -43,7 +54,7 @@ ready(() => {
     console.log("A gamepad connected:");
     console.log(event.gamepad);
   });
-  
+
   window.addEventListener("gamepaddisconnected", (event) => {
     console.log("A gamepad disconnected:");
     console.log(event.gamepad);

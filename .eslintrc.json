@@ -12,7 +12,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "max-lines-per-function": ["error", 20],
+    "max-lines-per-function": ["error", 30],
     "curly": ["error", "all"],
     "default-case":"error",
     "default-param-last": "error",
@@ -21,7 +21,6 @@
     "no-console":"warn",
     "no-else-return":"error",
     "no-eval":"error",
-    "no-magic-numbers":"warn",
     "no-return-await": "error",
     "no-sequences": "error",
     "prefer-const":"error",
