@@ -9,10 +9,14 @@ function ready(fn: () => void) {
   }
 }
 
-async function run(ctx: CanvasRenderingContext2D) {
+async function run(
+  mainContext: CanvasRenderingContext2D,
+  hudContext: CanvasRenderingContext2D,
+) {
+  const frameRate = 60;
   const sm = await setupSounds();
-  const game = new Game(ctx, sm);
-  const step = 1 / 60; // 60 FPS
+  const game = new Game(mainContext, hudContext, sm);
+  const step = 1 / frameRate;
   let dt = 0;
   let last = -1;
   function loop(now: number) {
@@ -33,23 +37,26 @@ async function run(ctx: CanvasRenderingContext2D) {
   requestAnimationFrame(loop);
 }
 
-async function main() {
-  const btn = document.querySelector("button");
-  if (btn) {
-    btn.style.display = "none";
+function getContext(id: string) {
+  const canvas = document.getElementById(id) as HTMLCanvasElement;
+  if (!canvas) {
+    throw new Error(`Canvas '${id}' not found`);
   }
-
-  const canvas = document.querySelector("canvas");
-  const ctx = canvas?.getContext("2d");
-  if (canvas && ctx) {
-    canvas.style.display = "block";
-    run(ctx);
+  const context = canvas.getContext("2d");
+  if (!context) {
+    throw new Error("Cannot get mainContext");
   }
+  return context;
 }
 
-ready(() => {
-  document.querySelector("button")?.addEventListener("click", main, false);
+async function main() {
+  const mainContext = getContext("ui-main");
+  const hudContext = getContext("ui-hud");
 
+  run(mainContext, hudContext);
+}
+
+function gamepadDebug() {
   window.addEventListener("gamepadconnected", (event) => {
     console.log("A gamepad connected:");
     console.log(event.gamepad);
@@ -59,6 +66,16 @@ ready(() => {
     console.log("A gamepad disconnected:");
     console.log(event.gamepad);
   });
+}
+
+ready(() => {
+  const btn = document.querySelector("button");
+  btn?.addEventListener("click", () => {
+    btn.disabled = true;
+    main();
+  }, false);
+
+  gamepadDebug();
 
   console.log("WAITING");
 });
