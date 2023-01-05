@@ -9,9 +9,9 @@ function ready(fn: () => void) {
   }
 }
 
-async function main() {
+async function run(ctx: CanvasRenderingContext2D) {
   const sm = await setupSounds();
-  const game = new Game(sm);
+  const game = new Game(ctx, sm);
   let lastRender = 0;
   function loop(timestamp: DOMHighResTimeStamp) {
     const dt = timestamp - lastRender;
@@ -20,6 +20,20 @@ async function main() {
     window.requestAnimationFrame(loop);
   }
   window.requestAnimationFrame(loop);
+}
+
+async function main() {
+  const btn = document.querySelector("button");
+  if (btn) {
+    btn.style.display = "none";
+  }
+
+  const canvas = document.querySelector("canvas"); 
+  const ctx = canvas?.getContext("2d"); 
+  if (canvas && ctx) {
+    canvas.style.display = "block";
+    run(ctx);
+  }
 }
 
 ready(() => {

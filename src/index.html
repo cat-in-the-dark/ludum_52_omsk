@@ -9,6 +9,14 @@
     />
   </head>
   <body>
-    <button>PLAY</button> 
+    <div style="width: 100%; overflow: hidden; height: 407.812px;">
+      <button>PLAY</button> 
+      <canvas
+        style="width: 100%; height: 100%; image-rendering: pixelated; display: none;"
+        id="canvas" 
+        oncontextmenu="event.preventDefault()" 
+        onmousedown="window.focus()"
+      ></canvas>
+    </div>
   </body>
 </html>
