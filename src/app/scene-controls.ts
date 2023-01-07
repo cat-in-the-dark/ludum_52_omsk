@@ -1,8 +1,8 @@
 import type { IScene } from "../lib/scene-manager";
 
 export class SceneControls implements IScene {
-  constructor(private ctx: CanvasRenderingContext2D){
-
+  constructor(private ctx: CanvasRenderingContext2D) {
+    // this.controllers = [];
   }
 
   activate(): void {
@@ -10,7 +10,7 @@ export class SceneControls implements IScene {
   }
   update(dt: number): void {
     this.ctx.fillStyle = "black";
-    this.ctx.fillRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height);
+    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     this.ctx.fillStyle = "green";
     this.ctx.fillRect(0, 0, 100, 100);

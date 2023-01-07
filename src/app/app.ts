@@ -1,3 +1,4 @@
+import { inputs } from "../lib/inputs";
 import { Game } from "./game";
 import { setupSounds } from "./sounds";
 
@@ -11,9 +12,10 @@ function ready(fn: () => void) {
 
 async function run(
   mainContext: CanvasRenderingContext2D,
-  hudContext: CanvasRenderingContext2D,
+  hudContext: CanvasRenderingContext2D
 ) {
   const sm = await setupSounds();
+  inputs.connect();
   const game = new Game(mainContext, hudContext, sm);
   let last = -1;
   function loop(now: number) {
@@ -24,6 +26,7 @@ async function run(
     last = now;
 
     game.update(dt);
+    inputs.update(dt);
 
     requestAnimationFrame(loop);
   }
@@ -49,26 +52,16 @@ async function main() {
   run(mainContext, hudContext);
 }
 
-function gamepadDebug() {
-  window.addEventListener("gamepadconnected", (event) => {
-    console.log("A gamepad connected:");
-    console.log(event.gamepad);
-  });
-
-  window.addEventListener("gamepaddisconnected", (event) => {
-    console.log("A gamepad disconnected:");
-    console.log(event.gamepad);
-  });
-}
-
 ready(() => {
   const btn = document.querySelector("button");
-  btn?.addEventListener("click", () => {
-    btn.disabled = true;
-    main();
-  }, false);
-
-  gamepadDebug();
+  btn?.addEventListener(
+    "click",
+    () => {
+      btn.disabled = true;
+      main();
+    },
+    false
+  );
 
   console.log("WAITING");
 });
