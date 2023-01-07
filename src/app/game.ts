@@ -1,6 +1,7 @@
+import type { IUpdateable } from "../lib/interfaces/updateable";
 import type { SoundManager } from "./sound-manager";
 
-export class Game {
+export class Game implements IUpdateable {
   constructor(
     private ctx: CanvasRenderingContext2D,
     private hud: CanvasRenderingContext2D,
@@ -8,6 +9,9 @@ export class Game {
   ) { }
 
   draw(dt: number) {
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0,0,this.ctx.canvas.width, this.ctx.canvas.height);
+
     this.ctx.fillStyle = "green";
     this.ctx.fillRect(0, 0, 100, 100);
 

@@ -1,3 +1,5 @@
+import type { IUpdateable } from "./interfaces/updateable";
+
 export interface IScene {
   activate(): void;
   update(dt: number): void;
@@ -5,9 +7,9 @@ export interface IScene {
   exit(): void;
 }
 
-export class SceneManager {
-  private current: string = "";
-  private next: string = "";
+export class SceneManager implements IUpdateable {
+  private current = "";
+  private next = "";
   private scenes: Map<string, IScene> = new Map();
 
   update(dt: number) {
