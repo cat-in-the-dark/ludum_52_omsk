@@ -1,3 +1,4 @@
+import { Player } from "../gameobjects/player";
 import { inputs } from "../lib/inputs";
 import { Vec2 } from "../lib/vec2";
 import {
@@ -7,7 +8,6 @@ import {
   newGampePadControls,
   newWasdControls,
 } from "./controls";
-import { Player } from "./player";
 import type { IScene } from "../lib/scene-manager";
 
 export class SceneControls implements IScene {

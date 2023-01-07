@@ -1,6 +1,6 @@
+import type { Controls } from "../app/controls";
 import type { IUpdateable } from "../lib/interfaces/updateable";
 import type { Vec2 } from "../lib/vec2";
-import type { Controls } from "./controls";
 
 export class Player implements IUpdateable {
   private width = 32;
