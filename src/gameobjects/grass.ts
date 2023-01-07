@@ -8,7 +8,7 @@ interface Grassinka {
   timeShift: number;
 }
 
-const GROW_SPEED = 0.05;
+const GROW_SPEED = 0.1;
 const MIN_GROW_VALUE = GROW_SPEED * 2;
 const COLLECT_SPEED = -1.5;
 
@@ -17,18 +17,18 @@ export class Grass implements IUpdateable {
     private ctx: CanvasRenderingContext2D,
     private x: number,
     private y: number,
-    private growSpeed: number = 0.05
+    private growSpeed: number = GROW_SPEED
   ) {}
 
   public growValue = 0;
 
   private time = 0;
 
-  private grassinkas: Array<Grassinka> = range(0, 64).map(() => ({
+  private grassinkas: Array<Grassinka> = range(0, 12).map(() => ({
     // pos: new Vec2(randomBetween(0, 28), randomBetween(8, 30)),
-    pos: new Vec2(randomBetween(-2, 30), randomBetween(2, 32)),
-    color: `rgb(${randomBetween(30, 60)}, ${randomBetween(140, 230)}, 0)`,
-    timeShift: randomBetween(-1, 1),
+    pos: new Vec2(randomBetween(-2, 26), randomBetween(2, 32)),
+    color: `rgb(${randomBetween(40, 60)}, ${randomBetween(190, 210)}, 0)`,
+    timeShift: randomBetween(0, 1),
   }));
 
   collect(): number {
@@ -46,7 +46,7 @@ export class Grass implements IUpdateable {
     const time = g.timeShift + this.time;
 
     const upperPoint = {
-      x: (2 + 2 * Math.sin(2 * time)) * this.growValue,
+      x: (2 + 3 * Math.sin(2 * time)) * this.growValue,
       y: -16 * this.growValue + 0 * Math.sin(3 * time),
     };
 
