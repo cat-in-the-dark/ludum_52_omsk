@@ -20,9 +20,9 @@ export class Game implements IUpdateable {
   );
 
   update(dt: number) {
-    this.ctx.scale(0.5, 0.5);
+    // this.ctx.scale(0.5, 0.5);
     sceneManager.update(dt);
-    this.testGrass.forEach((grass) => grass.update(dt));
-    this.ctx.resetTransform();
+    // this.testGrass.forEach((grass) => grass.update(dt));
+    // this.ctx.resetTransform();
   }
 }

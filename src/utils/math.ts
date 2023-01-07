@@ -13,3 +13,7 @@ export function range(begin: number, end: number): Array<number> {
   }
   return arr;
 }
+
+export function lerp(begin: number, end: number, t: number) {
+  return begin + (end - begin) * t;
+}

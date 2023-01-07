@@ -1,3 +1,5 @@
+import { lerp } from "../utils/math";
+
 export class Vec2 {
   constructor(public x: number = 0, public y: number = 0) {}
 
@@ -5,14 +7,21 @@ export class Vec2 {
     return new Vec2(other.x + this.x, other.y + this.y);
   }
 
-  /**
-   * Inplace vector scaling
-   * @param s scalar
-   * @returns scaled vector
-   */
   scale(s: number): Vec2 {
-    this.x *= s;
-    this.y *= s;
-    return this;
+    return new Vec2(this.x * s, this.y * s);
   }
+
+  get sqrMagnitude(): number {
+    return this.x * this.x + this.y * this.y;
+  }
+
+  get magnitude(): number {
+    return Math.sqrt(this.sqrMagnitude);
+  }
+}
+
+export function lerpVec2(begin: Vec2, end: Vec2, t: number) {
+  const x = lerp(begin.x, end.x, t);
+  const y = lerp(begin.y, end.y, t);
+  return new Vec2(x, y);
 }

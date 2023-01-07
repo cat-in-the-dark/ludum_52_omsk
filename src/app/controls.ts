@@ -29,6 +29,7 @@ export class Controls implements IUpdateable {
     return new Vec2(0, 0);
   }
   dash() {
+    // TODO: it must be CLICK not pressed
     return inputs.isPressed(this.mapping.dash, this.id);
   }
 
