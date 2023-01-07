@@ -3,7 +3,6 @@ import type { IUpdateable } from "./interfaces/updateable";
 export interface IScene {
   activate(): void;
   update(dt: number): void;
-  draw(dt: number): void;
   exit(): void;
 }
 
@@ -14,17 +13,18 @@ export class SceneManager implements IUpdateable {
 
   update(dt: number) {
     if (this.current !== this.next) {
-      console.log(`Transition from ${this.current} to ${this.next}`);
+      console.log(`Transition from '${this.current}' to '${this.next}'`);
       this.scenes.get(this.current)?.exit();
       this.current = this.next;
       this.scenes.get(this.current)?.activate();
     }
 
-    this.scenes.get(this.current)?.update(dt);
-  }
-
-  draw(dt: number) {
-    this.scenes.get(this.current)?.draw(dt);
+    const sc = this.scenes.get(this.current);
+    if (sc) {
+      sc.update(dt);
+    } else {
+      console.error(`[SceneManager.update] unknown scene '${this.current}'`);
+    }
   }
 
   put(name: string, scene: IScene) {

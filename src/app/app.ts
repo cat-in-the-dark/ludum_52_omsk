@@ -13,24 +13,17 @@ async function run(
   mainContext: CanvasRenderingContext2D,
   hudContext: CanvasRenderingContext2D,
 ) {
-  const frameRate = 60;
   const sm = await setupSounds();
   const game = new Game(mainContext, hudContext, sm);
-  const step = 1 / frameRate;
-  let dt = 0;
   let last = -1;
   function loop(now: number) {
     if (last < 0) {
       last = now;
     }
-    dt += Math.min(1, (now - last) / 1000);
+    const dt = Math.min(1, (now - last) / 1000);
     last = now;
 
-    while (dt > step) {
-      dt -= step;
-      game.update(step);
-    }
-    game.draw(dt);
+    game.update(dt);
 
     requestAnimationFrame(loop);
   }
