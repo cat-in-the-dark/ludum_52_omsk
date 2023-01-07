@@ -10,7 +10,8 @@ export class Player implements IUpdateable {
   constructor(
     private ctx: CanvasRenderingContext2D,
     private pos: Vec2,
-    public controls: Controls
+    public controls: Controls,
+    private color: string
   ) {}
 
   update(dt: number): void {
@@ -21,7 +22,7 @@ export class Player implements IUpdateable {
   }
 
   draw() {
-    this.ctx.fillStyle = "yellow";
+    this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
   }
 }

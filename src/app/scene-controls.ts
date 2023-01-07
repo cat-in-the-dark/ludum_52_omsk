@@ -28,6 +28,32 @@ export class SceneControls implements IScene {
     this.handleNewPlayer();
   }
 
+  trySpawn(id: string, keys: Set<string>) {
+    if (id === "keyboard" && !this.players.has("wasd") && isWASD(keys)) {
+      console.log("Spawn WASD");
+      this.players.set(
+        "wasd",
+        new Player(this.ctx, new Vec2(64, 64), newWasdControls(), "red")
+      );
+    } else if (
+      id === "keyboard" &&
+      !this.players.has("arrows") &&
+      isArrows(keys)
+    ) {
+      console.log("Spawn ARROWS");
+      this.players.set(
+        "arrows",
+        new Player(this.ctx, new Vec2(64, 64), newArrowControls(), "yellow")
+      );
+    } else if (id !== "keyboard" && !this.players.has(id)) {
+      console.log("Spawn: ", id);
+      this.players.set(
+        id,
+        new Player(this.ctx, new Vec2(64, 64), newGampePadControls(id), "green")
+      );
+    }
+  }
+
   handleNewPlayer() {
     if (this.players.size >= 4) {
       return;
@@ -35,26 +61,7 @@ export class SceneControls implements IScene {
 
     for (const [id, keys] of inputs.getPressed()) {
       if (keys.size !== 0) {
-        if (id === "keyboard" && !this.players.has("wasd") && isWASD(keys)) {
-          this.players.set(
-            "wasd",
-            new Player(this.ctx, new Vec2(64, 64), newWasdControls())
-          );
-        } else if (
-          id === "keyboard" &&
-          !this.players.has("arrows") &&
-          isArrows(keys)
-        ) {
-          this.players.set(
-            "arrows",
-            new Player(this.ctx, new Vec2(64, 64), newArrowControls())
-          );
-        } else if (!this.players.has(id)) {
-          this.players.set(
-            id,
-            new Player(this.ctx, new Vec2(64, 64), newGampePadControls(id))
-          );
-        }
+        this.trySpawn(id, keys);
       }
     }
   }
