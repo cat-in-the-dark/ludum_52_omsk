@@ -10,6 +10,33 @@ function ready(fn: () => void) {
   }
 }
 
+class FPS {
+  private time = 0;
+  private counter = 0;
+
+  constructor(private ctx: CanvasRenderingContext2D) {}
+
+  update(dt: number) {
+    this.counter += 1;
+    this.time += dt;
+
+    if (this.time > 1) {
+      this.draw(Math.floor(this.counter / this.time));
+      this.counter = 0;
+      this.time = 0;
+    }
+  }
+
+  draw(n: number) {
+    this.ctx.fillStyle = "green";
+    this.ctx.fillRect(590, 8, 50, 32);
+
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "24px serif";
+    this.ctx.fillText(n.toString(), 600, 32);
+  }
+}
+
 async function run(
   mainContext: CanvasRenderingContext2D,
   hudContext: CanvasRenderingContext2D
@@ -18,6 +45,9 @@ async function run(
   inputs.connect();
   const game = new Game(mainContext, hudContext, sm);
   let last = -1;
+  const fps = new FPS(hudContext);
+  fps.draw(60);
+
   function loop(now: number) {
     if (last < 0) {
       last = now;
@@ -27,6 +57,8 @@ async function run(
 
     game.update(dt);
     inputs.update(dt);
+
+    fps.update(dt);
 
     requestAnimationFrame(loop);
   }

@@ -26,6 +26,12 @@
         position: absolute;
         transform-origin: 0 0;
         transform: scale(1);
+      }
+      #ui-hud {
+        z-index: 9999;
+      }
+      #ui-main {
+        z-index: 9998;
         image-rendering: -moz-crisp-edges;
         image-rendering: -webkit-crisp-edges;
         image-rendering: pixelated;
@@ -37,8 +43,8 @@
     <div>
       <button>PLAY</button>
       <div id="stage">
-        <canvas id="ui-main" width="640" height="480"></canvas>
         <canvas id="ui-hud" width="640" height="480"></canvas>
+        <canvas id="ui-main" width="640" height="480"></canvas>
       </div> 
     </div>
   </body>
