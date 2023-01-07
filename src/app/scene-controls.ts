@@ -69,9 +69,13 @@ export class SceneControls implements IScene {
   }
 
   updatePhisics() {
-    for (const playerA of this.players.values()) {
-      for (const playerB of this.players.values()) {
-        if (playerA !== playerB) {
+    const list = [...this.players.values()];
+
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        const playerA = list[i];
+        const playerB = list[j];
+        if (playerA && playerB) {
           const bra = playerA.bodyRect;
           const brb = playerB.bodyRect;
           const intersect = rectIsIntersect(bra, brb);
@@ -86,8 +90,13 @@ export class SceneControls implements IScene {
   }
 
   collidePlayers(lhs: Player, rhs: Player) {
-    console.log("Intersect");
-    // TODO: apply force!
+    if (lhs.dashing && !rhs.dashing) {
+      rhs.dashedBy(lhs);
+    }
+    if (!lhs.dashing && rhs.dashing) {
+      lhs.dashedBy(rhs);
+    }
+    // else nothing ot do
   }
 
   exit(): void {
