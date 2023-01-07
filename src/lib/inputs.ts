@@ -35,7 +35,12 @@ class Inputs implements IUpdateable {
   }
 
   update(dt: number) {
-    document.hasFocus() || this.state.clear();
+    if (!document.hasFocus()) {
+      this.state.forEach((src) => {
+        src.clear();
+      });
+      return;
+    }
     const gamepads = navigator.getGamepads();
     gamepads.forEach((gp) => {
       if (gp) {
@@ -45,10 +50,10 @@ class Inputs implements IUpdateable {
         gpState?.set("B", gp.buttons[1]?.pressed || false);
         gpState?.set("A", gp.buttons[0]?.pressed || false);
 
-        gpState?.set("Left", gp.buttons[14]?.pressed || false);
-        gpState?.set("Right", gp.buttons[15]?.pressed || false);
-        gpState?.set("Up", gp.buttons[12]?.pressed || false);
-        gpState?.set("Down", gp.buttons[13]?.pressed || false);
+        gpState?.set("ArrowLeft", gp.buttons[14]?.pressed || false);
+        gpState?.set("ArrowRight", gp.buttons[15]?.pressed || false);
+        gpState?.set("ArrowUp", gp.buttons[12]?.pressed || false);
+        gpState?.set("ArrowDown", gp.buttons[13]?.pressed || false);
       }
     });
 
