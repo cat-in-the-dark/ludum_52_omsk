@@ -11,7 +11,7 @@ type Mapping = {
 };
 
 export class Controls implements IUpdateable {
-  constructor(private mapping: Mapping, private id: string) {}
+  constructor(private mapping: Mapping, public id: string) {}
 
   dir() {
     if (inputs.isPressed(this.mapping.left, this.id)) {
@@ -54,9 +54,9 @@ export function newArrowControls() {
   return new Controls(
     {
       left: "ArrowLeft",
-      right: "ArrowLeft",
-      up: "ArrowLeft",
-      down: "ArrowLeft",
+      right: "ArrowRight",
+      up: "ArrowUp",
+      down: "ArrowDown",
       dash: "ShiftRight",
     },
     "keyboard"
@@ -67,11 +67,31 @@ export function newGampePadControls(id: string) {
   return new Controls(
     {
       left: "ArrowLeft",
-      right: "ArrowLeft",
-      up: "ArrowLeft",
-      down: "ArrowLeft",
+      right: "ArrowRight",
+      up: "ArrowUp",
+      down: "ArrowDown",
       dash: "A",
     },
     id
+  );
+}
+
+export function isArrows(keys: Set<string>) {
+  return (
+    keys.has("ArrowLeft") ||
+    keys.has("ArrowRight") ||
+    keys.has("ArrowUp") ||
+    keys.has("ArrowDown") ||
+    keys.has("ShiftRight")
+  );
+}
+
+export function isWASD(keys: Set<string>) {
+  return (
+    keys.has("KeyA") ||
+    keys.has("KeyS") ||
+    keys.has("KeyD") ||
+    keys.has("KeyW") ||
+    keys.has("KeyE")
   );
 }
