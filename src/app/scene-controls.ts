@@ -1,5 +1,6 @@
 import { Player } from "../gameobjects/player";
 import { inputs } from "../lib/inputs";
+import { rectIsIntersect } from "../lib/physics";
 import { Vec2 } from "../lib/vec2";
 import {
   isArrows,
@@ -26,6 +27,7 @@ export class SceneControls implements IScene {
     this.players.forEach((player) => player.update(dt));
 
     this.handleNewPlayer();
+    this.updatePhisics();
   }
 
   trySpawn(id: string, keys: Set<string>) {
@@ -64,6 +66,28 @@ export class SceneControls implements IScene {
         this.trySpawn(id, keys);
       }
     }
+  }
+
+  updatePhisics() {
+    for (const playerA of this.players.values()) {
+      for (const playerB of this.players.values()) {
+        if (playerA !== playerB) {
+          const bra = playerA.bodyRect;
+          const brb = playerB.bodyRect;
+          const intersect = rectIsIntersect(bra, brb);
+          if (intersect) {
+            this.collidePlayers(playerA, playerB);
+          }
+        }
+      }
+
+      // TODO: iterate field
+    }
+  }
+
+  collidePlayers(lhs: Player, rhs: Player) {
+    console.log("Intersect");
+    // TODO: apply force!
   }
 
   exit(): void {

@@ -1,5 +1,6 @@
 import { Cooldown } from "../lib/cooldown";
 import { easeInBack } from "../lib/easings";
+import { Rect } from "../lib/physics";
 import { TweenVec2 } from "../lib/tween";
 import { Vec2 } from "../lib/vec2";
 import type { Controls } from "../app/controls";
@@ -11,6 +12,7 @@ export class Player implements IUpdateable {
   private speed = 128;
   private dir: Vec2 = new Vec2(1, 0);
   private dashDist = 128;
+  private body: Rect = new Rect(0, 0, 32, 32);
 
   private dashTween = new TweenVec2(0.5, easeInBack);
   private dashCooldown = new Cooldown(2);
@@ -21,6 +23,15 @@ export class Player implements IUpdateable {
     public controls: Controls,
     private color: string
   ) {}
+
+  get bodyRect() {
+    return new Rect(
+      this.pos.x + this.body.x,
+      this.pos.y + this.body.y,
+      this.body.w,
+      this.body.h
+    );
+  }
 
   update(dt: number): void {
     if (this.dashTween.isActive) {
