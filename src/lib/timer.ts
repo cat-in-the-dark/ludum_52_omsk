@@ -15,6 +15,10 @@ export class Timer implements IUpdateable {
     return this.elapsed;
   }
 
+  get progress() {
+    return this.elapsed / this.time;
+  }
+
   update(dt: number) {
     this.elapsed += dt;
   }
