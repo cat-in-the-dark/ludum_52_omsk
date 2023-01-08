@@ -21,7 +21,7 @@ export const VIEWPORT = new Rect(0, 0, 480, 480);
 export class GameScreen implements IScene {
   public players: Map<string, Player> = new Map();
   private grass: Array<Grass> = [];
-  private levelTimer = new Timer(30, 0);
+  private levelTimer = new Timer(60, 0);
   private timerHud = new TimerHud(this.ctx, this.levelTimer);
 
   private spawnPoses = [
