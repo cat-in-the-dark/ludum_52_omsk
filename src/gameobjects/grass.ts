@@ -27,8 +27,8 @@ export class Grass implements IUpdateable {
   private grassinkas: Array<Grassinka> = range(0, 12).map(() => ({
     // pos: new Vec2(randomBetween(0, 28), randomBetween(8, 30)),
     pos: new Vec2(randomBetween(-2, 26), randomBetween(2, 32)),
-    color: `rgb(${randomBetween(40, 60)}, ${randomBetween(190, 210)}, 0)`,
-    timeShift: randomBetween(0, 1),
+    color: `rgb(${randomBetween(30, 70)}, ${randomBetween(120, 220)}, 0)`,
+    timeShift: randomBetween(0, 1.5),
   }));
 
   collect(): number {
@@ -43,10 +43,11 @@ export class Grass implements IUpdateable {
     this.ctx.save();
     this.ctx.translate(g.pos.x, g.pos.y);
     this.ctx.strokeStyle = g.color;
+    this.ctx.lineWidth = 1 + 4 * this.growValue;
     const time = g.timeShift + this.time;
 
     const upperPoint = {
-      x: (2 + 3 * Math.sin(2 * time)) * this.growValue,
+      x: (2 + 5 * Math.sin(2 * time)) * this.growValue,
       y: -16 * this.growValue + 0 * Math.sin(3 * time),
     };
 
@@ -55,14 +56,14 @@ export class Grass implements IUpdateable {
       this.ctx.moveTo(stX, stY);
       this.ctx.quadraticCurveTo(
         1 + 3 * this.growValue,
-        -2 - 6 * this.growValue,
+        -2 - 12 * this.growValue,
         upperPoint.x,
         upperPoint.y
       );
       this.ctx.stroke();
     };
 
-    drawSegment(0, 0);
+    // drawSegment(0, 0);
     drawSegment(4, 0);
 
     this.ctx.restore();
