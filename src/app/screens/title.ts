@@ -9,13 +9,13 @@ export class TitleScreen implements IScene {
     private tm: TexturesManager
   ) {}
 
-  private timer = new Cooldown(3);
+  private timer = new Cooldown(2);
 
   activate(): void {
     this.timer.reset();
   }
   update(dt: number): void {
-    this.ctx.fillStyle = "yellow";
+    this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.ctx.drawImage(this.tm.logo, 0, 0);
 

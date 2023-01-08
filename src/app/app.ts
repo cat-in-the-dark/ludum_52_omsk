@@ -1,4 +1,5 @@
 import { ScoreHud } from "../gameobjects/scoreHud";
+import { inputs } from "../lib/inputs";
 import { sceneManager } from "../lib/scene-manager";
 import { GameScreen } from "./screens/game";
 import { ResultsScreen } from "./screens/results";
@@ -19,14 +20,19 @@ export class App implements IUpdateable {
     const game = new GameScreen(ctx, tm);
     sceneManager.put("game", game);
     sceneManager.put("title", new TitleScreen(ctx, tm));
-    sceneManager.set("game");
     sceneManager.put("results", new ResultsScreen(ctx, tm));
+
+    sceneManager.set("title");
 
     this.scoreHud = new ScoreHud(this.ctx, game);
   }
 
   update(dt: number) {
     sceneManager.update(dt);
+
+    if (inputs.isPressed("Escape")) {
+      sceneManager.set("title");
+    }
 
     if (
       sceneManager.currentName === "game" ||
