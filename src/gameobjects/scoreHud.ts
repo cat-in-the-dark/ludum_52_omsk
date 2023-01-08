@@ -10,7 +10,7 @@ export class ScoreHud implements IUpdateable {
   update(dt: number): void {
     let i = 0;
     this.ctx.save();
-    this.ctx.translate(VIEWPORT.maxX + 8, 32);
+    this.ctx.translate(VIEWPORT.maxX + 8, 64);
     this.ctx.fillStyle = "white";
     for (const player of this.gameScreen.players.values()) {
       const score = Math.round(player.collectedGrass);

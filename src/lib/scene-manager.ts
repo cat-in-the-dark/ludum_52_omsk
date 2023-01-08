@@ -11,6 +11,10 @@ export class SceneManager implements IUpdateable {
   private next = "";
   private scenes: Map<string, IScene> = new Map();
 
+  get currentName() {
+    return this.current;
+  }
+
   update(dt: number) {
     if (this.current !== this.next) {
       console.log(`Transition from '${this.current}' to '${this.next}'`);

@@ -1,8 +1,10 @@
 import { Grass } from "../../gameobjects/grass";
 import { Player } from "../../gameobjects/player";
-import { ScoreHud } from "../../gameobjects/scoreHud";
+import { TimerHud } from "../../gameobjects/timerHud";
 import { inputs } from "../../lib/inputs";
 import { Rect, rectIsIntersect } from "../../lib/physics";
+import { IScene, sceneManager } from "../../lib/scene-manager";
+import { Timer } from "../../lib/timer";
 import { Vec2 } from "../../lib/vec2";
 import { range } from "../../utils/math";
 import {
@@ -12,7 +14,6 @@ import {
   newGampePadControls,
   newWasdControls,
 } from "../controls";
-import type { IScene } from "../../lib/scene-manager";
 import type { TexturesManager } from "../textures";
 
 export const VIEWPORT = new Rect(0, 0, 480, 480);
@@ -20,7 +21,8 @@ export const VIEWPORT = new Rect(0, 0, 480, 480);
 export class GameScreen implements IScene {
   public players: Map<string, Player> = new Map();
   private grass: Array<Grass> = [];
-  private scoreHud: ScoreHud = new ScoreHud(this.ctx, this);
+  private levelTimer = new Timer(30, 0);
+  private timerHud = new TimerHud(this.ctx, this.levelTimer);
 
   private spawnPoses = [
     new Vec2(VIEWPORT.minX + 16, VIEWPORT.minY + 16),
@@ -41,6 +43,7 @@ export class GameScreen implements IScene {
         (y) => new Grass(this.ctx, new Vec2(x * 32, y * 32), 0.8)
       )
     );
+    this.levelTimer.reset(0);
   }
 
   update(dt: number): void {
@@ -51,10 +54,18 @@ export class GameScreen implements IScene {
 
     this.players.forEach((player) => player.update(dt));
 
-    this.scoreHud.update(dt);
-
     this.handleNewPlayer();
-    this.updatePhisics();
+    this.updatePhysics();
+
+    if (this.levelTimer.isPassed) {
+      sceneManager.set("results");
+    }
+
+    if (this.players.size > 0) {
+      this.levelTimer.update(dt);
+    }
+
+    this.timerHud.update(dt);
   }
 
   updateGrass(dt: number) {
@@ -122,7 +133,7 @@ export class GameScreen implements IScene {
     }
   }
 
-  updatePhisics() {
+  updatePhysics() {
     const list = [...this.players.values()];
 
     for (let i = 0; i < list.length; i++) {

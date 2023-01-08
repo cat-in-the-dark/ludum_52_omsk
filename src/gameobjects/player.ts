@@ -32,7 +32,7 @@ export class Player implements IUpdateable {
   private dashedDist = 32;
   private dashedTween = new TweenVec2(0.4, easeOutBounce);
   private blinker = new Blinker(0.05);
-  private stunTimer = new Timer(2);
+  private stunTimer = new Timer(2, 1000);
 
   private dashTween = new TweenVec2(0.5, easeInBack);
   private dashCooldown = new Cooldown(2);
