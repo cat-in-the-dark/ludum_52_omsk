@@ -13,20 +13,20 @@ type Mapping = {
 export class Controls implements IUpdateable {
   constructor(private mapping: Mapping, public id: string) {}
 
-  dir() {
+  dir(): [Vec2, number] {
     if (inputs.isPressed(this.mapping.left, this.id)) {
-      return new Vec2(-1, 0);
+      return [new Vec2(-1, 0), -Math.PI];
     }
     if (inputs.isPressed(this.mapping.right, this.id)) {
-      return new Vec2(1, 0);
+      return [new Vec2(1, 0), 0];
     }
     if (inputs.isPressed(this.mapping.up, this.id)) {
-      return new Vec2(0, -1);
+      return [new Vec2(0, -1), -Math.PI / 2];
     }
     if (inputs.isPressed(this.mapping.down, this.id)) {
-      return new Vec2(0, 1);
+      return [new Vec2(0, 1), Math.PI / 2];
     }
-    return new Vec2(0, 0);
+    return [new Vec2(0, 0), 0];
   }
   dash() {
     // TODO: it must be CLICK not pressed

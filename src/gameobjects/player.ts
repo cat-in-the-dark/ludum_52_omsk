@@ -14,6 +14,7 @@ export class Player implements IUpdateable {
   public sizes = new Vec2(32, 32);
   private speed = 128;
   private dir: Vec2 = new Vec2(1, 0);
+  private angle = 0;
   private dashDist = 128;
   private body: Rect = new Rect(0, 0, 32, 32);
 
@@ -76,10 +77,11 @@ export class Player implements IUpdateable {
       this.dasher = null;
     } else {
       // just moving
-      const dir = this.controls.dir();
+      const [dir, angle] = this.controls.dir();
       this.pos = this.pos.add(dir.scale(dt * this.speed));
       if (dir.sqrMagnitude > 0.01) {
         this.dir = dir; // save direction
+        this.angle = angle;
       }
     }
 
@@ -106,6 +108,9 @@ export class Player implements IUpdateable {
 
     this.ctx.save();
     this.ctx.translate(this.pos.x, this.pos.y);
+    this.ctx.translate(16, 16);
+    this.ctx.rotate(this.angle + Math.PI / 2);
+    this.ctx.translate(-16, -16);
     this.ctx.scale(2, 2);
     this.ctx.drawImage(this.texture, 0, 0);
     this.ctx.restore();
