@@ -1,99 +1,32 @@
-import { inputs } from "../lib/inputs";
-import { Game } from "./game";
-import { setupSounds } from "./sounds";
+import { Grass } from "../gameobjects/grass";
+import { sceneManager } from "../lib/scene-manager";
+import { range } from "../utils/math";
+import { GameScreen } from "./screens/game";
+import { TitleScreen } from "./screens/title";
+import type { IUpdateable } from "../lib/interfaces/updateable";
+import type { SoundManager } from "./sound-manager";
+import type { TexturesManager } from "./textures";
 
-function ready(fn: () => void) {
-  if (document.readyState !== "loading") {
-    fn();
-  } else {
-    document.addEventListener("DOMContentLoaded", fn);
-  }
-}
-
-class FPS {
-  private time = 0;
-  private counter = 0;
-
-  constructor(private ctx: CanvasRenderingContext2D) {}
-
-  update(dt: number) {
-    this.counter += 1;
-    this.time += dt;
-
-    if (this.time > 1) {
-      this.draw(Math.floor(this.counter / this.time));
-      this.counter = 0;
-      this.time = 0;
-    }
+export class App implements IUpdateable {
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private hud: CanvasRenderingContext2D,
+    private sm: SoundManager,
+    private tm: TexturesManager
+  ) {
+    sceneManager.put("game", new GameScreen(ctx));
+    sceneManager.put("title", new TitleScreen(ctx, tm));
+    sceneManager.set("title");
   }
 
-  draw(n: number) {
-    this.ctx.fillStyle = "green";
-    this.ctx.fillRect(590, 8, 50, 32);
-
-    this.ctx.fillStyle = "white";
-    this.ctx.font = "24px serif";
-    this.ctx.fillText(n.toString(), 600, 32);
-  }
-}
-
-async function run(
-  mainContext: CanvasRenderingContext2D,
-  hudContext: CanvasRenderingContext2D
-) {
-  const sm = await setupSounds();
-  inputs.connect();
-  const game = new Game(mainContext, hudContext, sm);
-  let last = -1;
-  const fps = new FPS(hudContext);
-  fps.draw(60);
-
-  function loop(now: number) {
-    if (last < 0) {
-      last = now;
-    }
-    const dt = Math.min(1, (now - last) / 1000);
-    last = now;
-
-    game.update(dt);
-    inputs.update(dt);
-
-    fps.update(dt);
-
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-}
-
-function getContext(id: string) {
-  const canvas = document.getElementById(id) as HTMLCanvasElement;
-  if (!canvas) {
-    throw new Error(`Canvas '${id}' not found`);
-  }
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Cannot get mainContext");
-  }
-  return context;
-}
-
-async function main() {
-  const mainContext = getContext("ui-main");
-  const hudContext = getContext("ui-hud");
-
-  run(mainContext, hudContext);
-}
-
-ready(() => {
-  const btn = document.querySelector("button");
-  btn?.addEventListener(
-    "click",
-    () => {
-      btn.disabled = true;
-      main();
-    },
-    false
+  private testGrass = range(0, 15).flatMap((x) =>
+    range(0, 15).map((y) => new Grass(this.ctx, x * 32, y * 32))
   );
 
-  console.log("WAITING");
-});
+  update(dt: number) {
+    // this.ctx.scale(0.5, 0.5);
+    sceneManager.update(dt);
+    // this.testGrass.forEach((grass) => grass.update(dt));
+    // this.ctx.resetTransform();
+  }
+}

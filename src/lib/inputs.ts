@@ -50,6 +50,15 @@ class Inputs implements IUpdateable {
     return this.pressedButtons;
   }
 
+  anyPressed() {
+    for (const src of this.pressedButtons.values()) {
+      if (src.size > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   updateGamepad(gp: Gamepad) {
     const gpState = new Map<string, boolean>();
     gpState.set("X", gp.buttons[2]?.pressed || false);

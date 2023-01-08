@@ -1,17 +1,17 @@
-import { Player } from "../gameobjects/player";
-import { inputs } from "../lib/inputs";
-import { rectIsIntersect } from "../lib/physics";
-import { Vec2 } from "../lib/vec2";
+import { Player } from "../../gameobjects/player";
+import { inputs } from "../../lib/inputs";
+import { rectIsIntersect } from "../../lib/physics";
+import { Vec2 } from "../../lib/vec2";
 import {
   isArrows,
   isWASD,
   newArrowControls,
   newGampePadControls,
   newWasdControls,
-} from "./controls";
-import type { IScene } from "../lib/scene-manager";
+} from "../controls";
+import type { IScene } from "../../lib/scene-manager";
 
-export class SceneControls implements IScene {
+export class GameScreen implements IScene {
   private players: Map<string, Player> = new Map();
 
   constructor(private ctx: CanvasRenderingContext2D) {}
