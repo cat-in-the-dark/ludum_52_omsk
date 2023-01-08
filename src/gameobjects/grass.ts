@@ -10,6 +10,7 @@ interface Grassinka {
 }
 
 const GROW_SPEED = 0.1;
+const COLLECT_SPEED = -5.5;
 const MIN_GROW_VALUE = 0.7;
 
 export class Grass implements IUpdateable {
@@ -31,13 +32,14 @@ export class Grass implements IUpdateable {
   }));
 
   get isCollectable() {
-    return this.growValue >= MIN_GROW_VALUE;
+    return this.growSpeed > 0 && this.growValue >= MIN_GROW_VALUE;
   }
 
   collect(): number {
     if (this.isCollectable) {
       const v = this.growValue;
-      this.growValue = 0;
+      // this.growValue = 0;
+      this.growSpeed = COLLECT_SPEED;
       return v;
     }
 
@@ -86,6 +88,9 @@ export class Grass implements IUpdateable {
   update(dt: number) {
     this.time += dt;
     this.growValue = clamp(this.growValue + this.growSpeed * dt, 0, 1);
+    if (this.growValue === 0) {
+      this.growSpeed = GROW_SPEED;
+    }
 
     this.ctx.save();
 
