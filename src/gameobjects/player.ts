@@ -28,7 +28,7 @@ export class Player implements IUpdateable {
 
   private dasher: Player | null = null;
   private dashedDist = 32;
-  private dashedTween = new TweenVec2(0.3, easeOutBounce);
+  private dashedTween = new TweenVec2(0.4, easeOutBounce);
 
   private dashTween = new TweenVec2(0.5, easeInBack);
   private dashCooldown = new Cooldown(2);
