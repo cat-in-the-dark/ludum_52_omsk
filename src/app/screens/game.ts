@@ -1,7 +1,7 @@
 import { Grass } from "../../gameobjects/grass";
 import { Player } from "../../gameobjects/player";
 import { inputs } from "../../lib/inputs";
-import { rectIsIntersect } from "../../lib/physics";
+import { Rect, rectIsIntersect } from "../../lib/physics";
 import { Vec2 } from "../../lib/vec2";
 import { range } from "../../utils/math";
 import {
@@ -13,6 +13,8 @@ import {
 } from "../controls";
 import type { IScene } from "../../lib/scene-manager";
 import type { TexturesManager } from "../textures";
+
+export const VIEWPORT = new Rect(0, 0, 480, 480);
 
 export class GameScreen implements IScene {
   private players: Map<string, Player> = new Map();
@@ -26,7 +28,9 @@ export class GameScreen implements IScene {
   activate(): void {
     this.players = new Map();
     this.grass = range(0, 15).flatMap((x) =>
-      range(0, 15).map((y) => new Grass(this.ctx, x * 32, y * 32))
+      range(0, 15).map(
+        (y) => new Grass(this.ctx, new Vec2(x * 32, y * 32), 0.8)
+      )
     );
   }
 
@@ -107,20 +111,31 @@ export class GameScreen implements IScene {
     const list = [...this.players.values()];
 
     for (let i = 0; i < list.length; i++) {
+      const playerA = list[i];
+      if (!playerA) {
+        continue;
+      }
+
       for (let j = i + 1; j < list.length; j++) {
-        const playerA = list[i];
         const playerB = list[j];
-        if (playerA && playerB) {
-          const bra = playerA.bodyRect;
-          const brb = playerB.bodyRect;
-          const intersect = rectIsIntersect(bra, brb);
-          if (intersect) {
-            this.collidePlayers(playerA, playerB);
-          }
+        if (!playerB) {
+          continue;
+        }
+
+        const bra = playerA.bodyRect;
+        const brb = playerB.bodyRect;
+        const intersect = rectIsIntersect(bra, brb);
+        if (intersect) {
+          this.collidePlayers(playerA, playerB);
         }
       }
 
-      // TODO: iterate field
+      this.grass.forEach((g) => {
+        // TODO: maybe just get a tile??
+        if (rectIsIntersect(g.bodyRect, playerA.bodyRect)) {
+          playerA.collect(g);
+        }
+      });
     }
   }
 

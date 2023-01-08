@@ -1,3 +1,4 @@
+import { Rect } from "../lib/physics";
 import { Vec2 } from "../lib/vec2";
 import { clamp, randomBetween, range } from "../utils/math";
 import type { IUpdateable } from "../lib/interfaces/updateable";
@@ -9,19 +10,17 @@ interface Grassinka {
 }
 
 const GROW_SPEED = 0.1;
-const MIN_GROW_VALUE = GROW_SPEED * 2;
-const COLLECT_SPEED = -1.5;
+const MIN_GROW_VALUE = 0.7;
 
 export class Grass implements IUpdateable {
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private x: number,
-    private y: number,
+    private pos: Vec2,
+    private growValue = 0,
     private growSpeed: number = GROW_SPEED
   ) {}
 
-  public growValue = 0;
-
+  private body = new Rect(4, 4, 24, 24);
   private time = 0;
 
   private grassinkas: Array<Grassinka> = range(0, 12).map(() => ({
@@ -31,12 +30,27 @@ export class Grass implements IUpdateable {
     timeShift: randomBetween(0, 1.5),
   }));
 
+  get isCollectable() {
+    return this.growValue >= MIN_GROW_VALUE;
+  }
+
   collect(): number {
-    if (this.growSpeed > 0) {
-      this.growSpeed = COLLECT_SPEED;
-      return this.growValue >= MIN_GROW_VALUE ? this.growValue : 0;
+    if (this.isCollectable) {
+      const v = this.growValue;
+      this.growValue = 0;
+      return v;
     }
+
     return 0;
+  }
+
+  get bodyRect() {
+    return new Rect(
+      this.pos.x + this.body.x,
+      this.pos.y + this.body.y,
+      this.body.w,
+      this.body.h
+    );
   }
 
   _drawGrassinka(g: Grassinka) {
@@ -72,16 +86,24 @@ export class Grass implements IUpdateable {
   update(dt: number) {
     this.time += dt;
     this.growValue = clamp(this.growValue + this.growSpeed * dt, 0, 1);
-    this.growValue;
 
     this.ctx.save();
 
-    this.ctx.translate(this.x, this.y);
+    this.ctx.translate(this.pos.x, this.pos.y);
 
     this.ctx.fillStyle = "darkgreen";
     this.ctx.fillRect(0, 0, 32, 32);
     this.grassinkas.forEach((grassinka) => this._drawGrassinka(grassinka));
 
     this.ctx.restore();
+
+    this.ctx.fillStyle = "black";
+    this.ctx.rect(
+      this.bodyRect.x,
+      this.bodyRect.y,
+      this.bodyRect.w,
+      this.bodyRect.h
+    );
+    this.ctx.stroke();
   }
 }

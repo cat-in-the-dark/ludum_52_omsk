@@ -39,3 +39,22 @@ export function rectContainsPoint(point: Vec2, box: Rect) {
     point.y <= box.maxY
   );
 }
+
+export function clampVec(vec: Vec2, rect: Rect, size?: Vec2) {
+  const h = size?.y || 0;
+  const w = size?.x || 0;
+  if (vec.x < rect.minX) {
+    vec.x = rect.minX;
+  }
+  if (vec.y < rect.minY) {
+    vec.y = rect.minY;
+  }
+  if (vec.x > rect.maxX - w) {
+    vec.x = rect.maxX - w;
+  }
+  if (vec.y > rect.maxY - h) {
+    vec.y = rect.maxY - h;
+  }
+
+  return vec;
+}

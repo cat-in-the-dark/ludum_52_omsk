@@ -17,3 +17,7 @@ export function range(begin: number, end: number): Array<number> {
 export function lerp(begin: number, end: number, t: number) {
   return begin + (end - begin) * t;
 }
+
+export function roundCell(x: number, cellSize: number) {
+  return Math.round(x / cellSize) * cellSize;
+}

@@ -1,10 +1,12 @@
+import { VIEWPORT } from "../app/screens/game";
 import { Cooldown } from "../lib/cooldown";
 import { easeInBack, easeOutBounce, easeOutExpo } from "../lib/easings";
-import { Rect } from "../lib/physics";
+import { clampVec, Rect } from "../lib/physics";
 import { TweenVec2 } from "../lib/tween";
 import { Vec2 } from "../lib/vec2";
 import type { Controls } from "../app/controls";
 import type { IUpdateable } from "../lib/interfaces/updateable";
+import type { Grass } from "./grass";
 
 function mask(a: Vec2, b: Vec2, mask: Vec2) {
   return new Vec2(mask.x === 0 ? a.x : b.x, mask.y === 0 ? a.y : b.y);
@@ -13,10 +15,11 @@ function mask(a: Vec2, b: Vec2, mask: Vec2) {
 export class Player implements IUpdateable {
   public sizes = new Vec2(32, 32);
   private speed = 128;
-  private dir: Vec2 = new Vec2(1, 0);
+  private dirName = "";
+  private dir: Vec2 = new Vec2(0, 0);
   private angle = 0;
   private dashDist = 128;
-  private body: Rect = new Rect(0, 0, 32, 32);
+  private body: Rect = new Rect(4, 4, 24, 24);
 
   private dasher: Player | null = null;
   private dashedDist = 32;
@@ -24,6 +27,8 @@ export class Player implements IUpdateable {
 
   private dashTween = new TweenVec2(0.5, easeInBack);
   private dashCooldown = new Cooldown(2);
+
+  public collectedGrass = 0;
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -39,6 +44,12 @@ export class Player implements IUpdateable {
       this.body.w,
       this.body.h
     );
+  }
+
+  collect(grass: Grass) {
+    if (grass.isCollectable) {
+      this.collectedGrass += grass.collect();
+    }
   }
 
   get dashing() {
@@ -77,12 +88,23 @@ export class Player implements IUpdateable {
       this.dasher = null;
     } else {
       // just moving
-      const [dir, angle] = this.controls.dir();
+      const [dir, angle, dirName] = this.controls.dir();
       this.pos = this.pos.add(dir.scale(dt * this.speed));
       if (dir.sqrMagnitude > 0.01) {
+        // if (this.dirName !== dirName) {
+        //   // direction was changed
+        //   this.pos = new Vec2(
+        //     roundCell(this.pos.x, 32),
+        //     roundCell(this.pos.y, 32)
+        //   );
+        // }
+        this.dirName = dirName;
         this.dir = dir; // save direction
         this.angle = angle;
       }
+      // console.log(this.pos.x, this.pos.y);
+      this.pos = clampVec(this.pos, VIEWPORT, this.sizes);
+      console.log(this.pos);
     }
 
     if (!this.dashed && this.controls.dash() && this.dashCooldown.invoke()) {
