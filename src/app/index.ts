@@ -29,7 +29,6 @@ class FPS implements IUpdateable {
     this.ctx.fillRect(520, 475 - 26, 120, 30);
 
     this.ctx.fillStyle = "white";
-    this.ctx.font = "24px font";
     this.ctx.fillText(`${n} FPS`, 530, 475);
     this.ctx.restore();
   }
@@ -72,6 +71,7 @@ function getContext(id: string) {
   if (!context) {
     throw new Error("Cannot get mainContext");
   }
+  context.font = "24px font";
   return context;
 }
 

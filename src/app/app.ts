@@ -18,8 +18,6 @@ export class App implements IUpdateable {
   }
 
   update(dt: number) {
-    // this.ctx.scale(0.5, 0.5);
     sceneManager.update(dt);
-    // this.ctx.resetTransform();
   }
 }
