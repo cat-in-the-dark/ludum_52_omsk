@@ -1,5 +1,6 @@
 import { Grass } from "../../gameobjects/grass";
 import { Player } from "../../gameobjects/player";
+import { ScoreHud } from "../../gameobjects/scoreHud";
 import { inputs } from "../../lib/inputs";
 import { Rect, rectIsIntersect } from "../../lib/physics";
 import { Vec2 } from "../../lib/vec2";
@@ -17,8 +18,9 @@ import type { TexturesManager } from "../textures";
 export const VIEWPORT = new Rect(0, 0, 480, 480);
 
 export class GameScreen implements IScene {
-  private players: Map<string, Player> = new Map();
+  public players: Map<string, Player> = new Map();
   private grass: Array<Grass> = [];
+  private scoreHud: ScoreHud = new ScoreHud(this.ctx, this);
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -41,6 +43,8 @@ export class GameScreen implements IScene {
     this.updateGrass(dt);
 
     this.players.forEach((player) => player.update(dt));
+
+    this.scoreHud.update(dt);
 
     this.handleNewPlayer();
     this.updatePhisics();

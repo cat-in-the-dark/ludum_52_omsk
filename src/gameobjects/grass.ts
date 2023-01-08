@@ -96,7 +96,9 @@ export class Grass implements IUpdateable {
     this.grassinkas.forEach((grassinka) => this._drawGrassinka(grassinka));
 
     this.ctx.restore();
+  }
 
+  private debugPhysics() {
     this.ctx.fillStyle = "black";
     this.ctx.rect(
       this.bodyRect.x,

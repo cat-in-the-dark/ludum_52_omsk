@@ -1,10 +1,10 @@
 import { VIEWPORT } from "../app/screens/game";
 import { Cooldown } from "../lib/cooldown";
-import { easeInBack, easeOutBounce, easeOutExpo } from "../lib/easings";
+import { easeInBack, easeOutBounce } from "../lib/easings";
 import { clampVec, Rect } from "../lib/physics";
 import { TweenVec2 } from "../lib/tween";
 import { Vec2 } from "../lib/vec2";
-import type { Controls } from "../app/controls";
+import type { Controls, Dirs } from "../app/controls";
 import type { IUpdateable } from "../lib/interfaces/updateable";
 import type { Grass } from "./grass";
 
@@ -13,13 +13,18 @@ function mask(a: Vec2, b: Vec2, mask: Vec2) {
 }
 
 export class Player implements IUpdateable {
-  public sizes = new Vec2(32, 32);
+  public sizes = new Vec2(48, 48);
   private speed = 128;
-  private dirName = "";
+  private dirName: Dirs = "";
   private dir: Vec2 = new Vec2(0, 0);
   private angle = 0;
   private dashDist = 128;
-  private body: Rect = new Rect(4, 4, 24, 24);
+  private body: Rect = new Rect(
+    4,
+    4,
+    this.sizes.x - 4 * 2,
+    this.sizes.y - 4 * 2
+  );
 
   private dasher: Player | null = null;
   private dashedDist = 32;
@@ -34,7 +39,7 @@ export class Player implements IUpdateable {
     private ctx: CanvasRenderingContext2D,
     public pos: Vec2,
     public controls: Controls,
-    private texture: HTMLImageElement
+    public texture: HTMLImageElement
   ) {}
 
   get bodyRect() {
@@ -47,7 +52,7 @@ export class Player implements IUpdateable {
   }
 
   collect(grass: Grass) {
-    if (grass.isCollectable) {
+    if (grass.isCollectable && !this.dashed) {
       this.collectedGrass += grass.collect();
     }
   }
@@ -118,6 +123,16 @@ export class Player implements IUpdateable {
   }
 
   draw() {
+    this.ctx.save();
+    this.ctx.translate(this.pos.x, this.pos.y);
+    this.ctx.translate(this.sizes.x / 2, this.sizes.x / 2);
+    this.flip();
+    this.ctx.translate(-this.sizes.x / 2, -this.sizes.x / 2);
+    this.ctx.drawImage(this.texture, 0, 0);
+    this.ctx.restore();
+  }
+
+  private debugPhysics() {
     this.ctx.fillStyle = "black";
     this.ctx.rect(
       this.bodyRect.x,
@@ -126,14 +141,25 @@ export class Player implements IUpdateable {
       this.bodyRect.h
     );
     this.ctx.stroke();
+  }
 
-    this.ctx.save();
-    this.ctx.translate(this.pos.x, this.pos.y);
-    this.ctx.translate(16, 16);
-    this.ctx.rotate(this.angle + Math.PI / 2);
-    this.ctx.translate(-16, -16);
-    this.ctx.scale(2, 2);
-    this.ctx.drawImage(this.texture, 0, 0);
-    this.ctx.restore();
+  flip() {
+    switch (this.dirName) {
+      case "UP":
+        // default
+        break;
+      case "DOWN":
+        this.ctx.scale(1, -1);
+        break;
+      case "LEFT":
+        this.ctx.rotate(-Math.PI / 2);
+        break;
+      case "RIGHT":
+        this.ctx.rotate(Math.PI / 2);
+        break;
+      default:
+        // nothing
+        break;
+    }
   }
 }

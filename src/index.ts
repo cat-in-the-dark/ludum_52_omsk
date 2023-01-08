@@ -10,10 +10,16 @@ function ready(fn: () => void) {
 
 ready(() => {
   const btn = document.querySelector("button");
+  const stage = document.getElementById("stage");
+  if (!stage) {
+    return;
+  }
   btn?.addEventListener(
     "click",
     () => {
+      stage.style.display = "block";
       btn.disabled = true;
+      btn.remove();
       main();
     },
     false

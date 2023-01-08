@@ -2,12 +2,15 @@ import { inputs } from "../lib/inputs";
 import { App } from "./app";
 import { setupSounds } from "./sounds";
 import { setupTextures } from "./textures";
+import type { IUpdateable } from "../lib/interfaces/updateable";
 
-class FPS {
+class FPS implements IUpdateable {
   private time = 0;
   private counter = 0;
 
-  constructor(private ctx: CanvasRenderingContext2D) {}
+  constructor(private ctx: CanvasRenderingContext2D) {
+    this.draw(60);
+  }
 
   update(dt: number) {
     this.counter += 1;
@@ -20,13 +23,15 @@ class FPS {
     }
   }
 
-  draw(n: number) {
+  private draw(n: number) {
+    this.ctx.save();
     this.ctx.fillStyle = "green";
-    this.ctx.fillRect(590, 8, 50, 32);
+    this.ctx.fillRect(520, 475 - 26, 120, 30);
 
     this.ctx.fillStyle = "white";
-    this.ctx.font = "24px serif";
-    this.ctx.fillText(n.toString(), 600, 32);
+    this.ctx.font = "24px font";
+    this.ctx.fillText(`${n} FPS`, 530, 475);
+    this.ctx.restore();
   }
 }
 
@@ -40,7 +45,6 @@ async function run(
   const game = new App(mainContext, hudContext, sm, tm);
   let last = -1;
   const fps = new FPS(hudContext);
-  fps.draw(60);
 
   function loop(now: number) {
     if (last < 0) {

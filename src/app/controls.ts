@@ -10,10 +10,12 @@ type Mapping = {
   dash: string;
 };
 
+export type Dirs = "LEFT" | "RIGHT" | "UP" | "DOWN" | "";
+
 export class Controls implements IUpdateable {
   constructor(private mapping: Mapping, public id: string) {}
 
-  dir(): [Vec2, number, string] {
+  dir(): [Vec2, number, Dirs] {
     if (inputs.isPressed(this.mapping.left, this.id)) {
       return [new Vec2(-1, 0), -Math.PI, "LEFT"];
     }
