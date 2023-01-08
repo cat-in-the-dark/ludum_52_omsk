@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Game</title><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><style>@font-face {
+        font-family: font;
+        src: url("font.ttf");
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        min-height: fill-available;
+        margin: 0;
+        padding: 0;
+        font-family: "font";
+        background-color: black;
+      }
+
+      canvas {
+        position: absolute;
+        /* height: calc(2* 480px); */
+        height: 100%;
+        min-height: 480px;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+      #stage {
+        display: none;
+      }
+      #ui-hud {
+        z-index: 9999;
+      }
+      #ui-main {
+        z-index: 9998;
+      }
+
+      button {
+        width: 100%;
+        height: 64px;
+      }</style><script defer="defer" src="bundle.js"></script></head><body><div><button>PLAY</button><div id="stage"><canvas id="ui-hud" width="640" height="480"></canvas><canvas id="ui-main" width="640" height="480"></canvas></div></div></body></html>
