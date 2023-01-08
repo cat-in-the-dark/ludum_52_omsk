@@ -28,7 +28,7 @@ export class Player implements IUpdateable {
     private ctx: CanvasRenderingContext2D,
     public pos: Vec2,
     public controls: Controls,
-    private color: string
+    private texture: HTMLImageElement
   ) {}
 
   get bodyRect() {
@@ -95,7 +95,19 @@ export class Player implements IUpdateable {
   }
 
   draw() {
-    this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(this.pos.x, this.pos.y, this.sizes.x, this.sizes.y);
+    this.ctx.fillStyle = "black";
+    this.ctx.rect(
+      this.bodyRect.x,
+      this.bodyRect.y,
+      this.bodyRect.w,
+      this.bodyRect.h
+    );
+    this.ctx.stroke();
+
+    this.ctx.save();
+    this.ctx.translate(this.pos.x, this.pos.y);
+    this.ctx.scale(2, 2);
+    this.ctx.drawImage(this.texture, 0, 0);
+    this.ctx.restore();
   }
 }

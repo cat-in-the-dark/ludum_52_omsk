@@ -1,6 +1,4 @@
-import { Grass } from "../gameobjects/grass";
 import { sceneManager } from "../lib/scene-manager";
-import { range } from "../utils/math";
 import { GameScreen } from "./screens/game";
 import { TitleScreen } from "./screens/title";
 import type { IUpdateable } from "../lib/interfaces/updateable";
@@ -14,19 +12,14 @@ export class App implements IUpdateable {
     private sm: SoundManager,
     private tm: TexturesManager
   ) {
-    sceneManager.put("game", new GameScreen(ctx));
+    sceneManager.put("game", new GameScreen(ctx, tm));
     sceneManager.put("title", new TitleScreen(ctx, tm));
-    sceneManager.set("title");
+    sceneManager.set("game");
   }
-
-  private testGrass = range(0, 15).flatMap((x) =>
-    range(0, 15).map((y) => new Grass(this.ctx, x * 32, y * 32))
-  );
 
   update(dt: number) {
     // this.ctx.scale(0.5, 0.5);
     sceneManager.update(dt);
-    // this.testGrass.forEach((grass) => grass.update(dt));
     // this.ctx.resetTransform();
   }
 }

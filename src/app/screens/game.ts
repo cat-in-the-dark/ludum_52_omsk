@@ -1,7 +1,9 @@
+import { Grass } from "../../gameobjects/grass";
 import { Player } from "../../gameobjects/player";
 import { inputs } from "../../lib/inputs";
 import { rectIsIntersect } from "../../lib/physics";
 import { Vec2 } from "../../lib/vec2";
+import { range } from "../../utils/math";
 import {
   isArrows,
   isWASD,
@@ -10,19 +12,29 @@ import {
   newWasdControls,
 } from "../controls";
 import type { IScene } from "../../lib/scene-manager";
+import type { TexturesManager } from "../textures";
 
 export class GameScreen implements IScene {
   private players: Map<string, Player> = new Map();
+  private grass: Array<Grass> = [];
 
-  constructor(private ctx: CanvasRenderingContext2D) {}
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private tm: TexturesManager
+  ) {}
 
   activate(): void {
-    //
+    this.players = new Map();
+    this.grass = range(0, 15).flatMap((x) =>
+      range(0, 15).map((y) => new Grass(this.ctx, x * 32, y * 32))
+    );
   }
 
   update(dt: number): void {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+    this.updateGrass(dt);
 
     this.players.forEach((player) => player.update(dt));
 
@@ -30,12 +42,25 @@ export class GameScreen implements IScene {
     this.updatePhisics();
   }
 
+  updateGrass(dt: number) {
+    this.grass.forEach((g) => g.update(dt));
+  }
+
+  private nextTrackTexture() {
+    return this.tm.tractors[this.players.size] || this.tm.tractors[0];
+  }
+
   trySpawn(id: string, keys: Set<string>) {
     if (id === "keyboard" && !this.players.has("wasd") && isWASD(keys)) {
       console.log("Spawn WASD");
       this.players.set(
         "wasd",
-        new Player(this.ctx, new Vec2(64, 64), newWasdControls(), "red")
+        new Player(
+          this.ctx,
+          new Vec2(64, 64),
+          newWasdControls(),
+          this.nextTrackTexture()
+        )
       );
     } else if (
       id === "keyboard" &&
@@ -45,13 +70,23 @@ export class GameScreen implements IScene {
       console.log("Spawn ARROWS");
       this.players.set(
         "arrows",
-        new Player(this.ctx, new Vec2(64, 64), newArrowControls(), "yellow")
+        new Player(
+          this.ctx,
+          new Vec2(64, 64),
+          newArrowControls(),
+          this.nextTrackTexture()
+        )
       );
     } else if (id !== "keyboard" && !this.players.has(id)) {
       console.log("Spawn: ", id);
       this.players.set(
         id,
-        new Player(this.ctx, new Vec2(64, 64), newGampePadControls(id), "green")
+        new Player(
+          this.ctx,
+          new Vec2(64, 64),
+          newGampePadControls(id),
+          this.nextTrackTexture()
+        )
       );
     }
   }
