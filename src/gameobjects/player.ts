@@ -102,15 +102,14 @@ export class Player implements IUpdateable {
         this.dir = dir; // save direction
         this.angle = angle;
       }
-      // console.log(this.pos.x, this.pos.y);
-      this.pos = clampVec(this.pos, VIEWPORT, this.sizes);
-      console.log(this.pos);
     }
 
     if (!this.dashed && this.controls.dash() && this.dashCooldown.invoke()) {
       const target = this.pos.add(this.dir.scale(this.dashDist));
       this.dashTween.start(this.pos, target);
     }
+
+    this.pos = clampVec(this.pos, VIEWPORT, this.sizes);
 
     this.dashCooldown.update(dt);
     this.dashTween.update(dt);
