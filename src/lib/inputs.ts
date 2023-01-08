@@ -1,11 +1,14 @@
 import type { IUpdateable } from "./interfaces/updateable";
 
+function gpid(gp: Gamepad) {
+  return `${gp.id}_${gp.index}`;
+}
+
 class Inputs implements IUpdateable {
-  private state: Map<string, Map<string, boolean>> = new Map();
   private pressedButtons: Map<string, Set<string>> = new Map();
 
   connect() {
-    this.state.set("keyboard", new Map());
+    console.log("BUM");
     this.pressedButtons.set("keyboard", new Set());
 
     window.addEventListener("keyup", (ev) => {
@@ -19,22 +22,20 @@ class Inputs implements IUpdateable {
       console.log("A gamepad connected:");
       console.log(event.gamepad);
 
-      this.state.set(event.gamepad.id, new Map());
-      this.pressedButtons.set(event.gamepad.id, new Set());
+      const gid = gpid(event.gamepad);
+      this.pressedButtons.set(gid, new Set());
     });
 
     window.addEventListener("gamepaddisconnected", (event) => {
       console.log("A gamepad disconnected:");
       console.log(event.gamepad);
 
-      this.state.delete(event.gamepad.id);
-      this.pressedButtons.delete(event.gamepad.id);
+      const gid = gpid(event.gamepad);
+      this.pressedButtons.delete(gid);
     });
   }
 
   updateKeyboard(code: string, isPressed: boolean) {
-    const kb = this.state.get("keyboard");
-    kb?.set(code, isPressed);
     if (isPressed) {
       this.pressedButtons.get("keyboard")?.add(code);
     } else {
@@ -43,7 +44,7 @@ class Inputs implements IUpdateable {
   }
 
   isPressed(code: string, id = "keyboard") {
-    return this.state.get(id)?.get(code) || false;
+    return this.pressedButtons.get(id)?.has(code) || false;
   }
 
   getPressed() {
@@ -85,13 +86,13 @@ class Inputs implements IUpdateable {
         pressed.add(code);
       }
     });
-    this.pressedButtons.set(gp.id, pressed);
-    this.state.set(gp.id, gpState);
+    const gid = gpid(gp);
+    this.pressedButtons.set(gid, pressed);
   }
 
   update(dt: number) {
     if (!document.hasFocus()) {
-      this.state.forEach((src) => {
+      this.pressedButtons.forEach((src) => {
         src.clear();
       });
       return;
@@ -105,13 +106,11 @@ class Inputs implements IUpdateable {
   }
 
   debug() {
-    this.state.forEach((src, name) => {
-      src.forEach((isPressed, code) => {
-        if (isPressed) {
-          console.log(name, code);
-        }
-      });
-    });
+    for (const [sid, values] of this.pressedButtons) {
+      if (values.size > 0) {
+        console.log(sid, values);
+      }
+    }
   }
 }
 
