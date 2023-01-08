@@ -73,7 +73,7 @@ export function newGampePadControls(id: string) {
       right: "ArrowRight",
       up: "ArrowUp",
       down: "ArrowDown",
-      dash: "A",
+      dash: "Fire",
     },
     id
   );

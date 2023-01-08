@@ -65,6 +65,14 @@ class Inputs implements IUpdateable {
     gpState.set("Y", gp.buttons[3]?.pressed || false);
     gpState.set("B", gp.buttons[1]?.pressed || false);
     gpState.set("A", gp.buttons[0]?.pressed || false);
+    gpState.set(
+      "Fire",
+      gpState.get("X") ||
+        gpState.get("Y") ||
+        gpState.get("B") ||
+        gpState.get("A") ||
+        false
+    );
 
     gpState.set("ArrowLeft", gp.buttons[14]?.pressed || false);
     gpState.set("ArrowRight", gp.buttons[15]?.pressed || false);
