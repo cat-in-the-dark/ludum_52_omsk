@@ -1,7 +1,9 @@
 import { VIEWPORT } from "../app/screens/game";
+import { Blinker } from "../lib/blinker";
 import { Cooldown } from "../lib/cooldown";
 import { easeInBack, easeOutBounce } from "../lib/easings";
 import { clampVec, Rect } from "../lib/physics";
+import { Timer } from "../lib/timer";
 import { TweenVec2 } from "../lib/tween";
 import { Vec2 } from "../lib/vec2";
 import type { Controls, Dirs } from "../app/controls";
@@ -29,6 +31,8 @@ export class Player implements IUpdateable {
   private dasher: Player | null = null;
   private dashedDist = 32;
   private dashedTween = new TweenVec2(0.4, easeOutBounce);
+  private blinker = new Blinker(0.05);
+  private stunTimer = new Timer(2);
 
   private dashTween = new TweenVec2(0.5, easeInBack);
   private dashCooldown = new Cooldown(2);
@@ -62,7 +66,11 @@ export class Player implements IUpdateable {
   }
 
   get dashed() {
-    return this.dashedTween.isActive || this.dasher !== null;
+    return (
+      this.dashedTween.isActive ||
+      this.dasher !== null ||
+      !this.stunTimer.isPassed
+    );
   }
 
   dashedBy(dasher: Player) {
@@ -71,6 +79,7 @@ export class Player implements IUpdateable {
     }
 
     this.dasher = dasher;
+    this.blinker.start();
   }
 
   private slideAfterDash(dir: Vec2) {
@@ -90,7 +99,10 @@ export class Player implements IUpdateable {
       this.pos = newPos;
     } else if (this.dasher && !this.dasher.dashing) {
       this.slideAfterDash(this.dasher.dir);
+      this.stunTimer.reset();
       this.dasher = null;
+    } else if (!this.stunTimer.isPassed) {
+      // wait for stun
     } else {
       // just moving
       const [dir, angle, dirName] = this.controls.dir();
@@ -107,6 +119,8 @@ export class Player implements IUpdateable {
         this.dir = dir; // save direction
         this.angle = angle;
       }
+
+      this.blinker.stop();
     }
 
     if (!this.dashed && this.controls.dash() && this.dashCooldown.invoke()) {
@@ -119,6 +133,8 @@ export class Player implements IUpdateable {
     this.dashCooldown.update(dt);
     this.dashTween.update(dt);
     this.dashedTween.update(dt);
+    this.blinker.update(dt);
+    this.stunTimer.update(dt);
     this.draw();
   }
 
@@ -129,6 +145,12 @@ export class Player implements IUpdateable {
     this.flip();
     this.ctx.translate(-this.sizes.x / 2, -this.sizes.x / 2);
     this.ctx.drawImage(this.texture, 0, 0);
+
+    if (this.blinker.invoke()) {
+      this.ctx.fillStyle = "red";
+      this.ctx.fillRect(8, 8, 32, 32);
+    }
+
     this.ctx.restore();
   }
 
