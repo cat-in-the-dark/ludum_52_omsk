@@ -22,6 +22,13 @@ export class GameScreen implements IScene {
   private grass: Array<Grass> = [];
   private scoreHud: ScoreHud = new ScoreHud(this.ctx, this);
 
+  private spawnPoses = [
+    new Vec2(VIEWPORT.minX + 16, VIEWPORT.minY + 16),
+    new Vec2(VIEWPORT.maxX - 16 - 48, VIEWPORT.maxY - 16 - 48),
+    new Vec2(VIEWPORT.minX + 16, VIEWPORT.maxY - 16 - 48),
+    new Vec2(VIEWPORT.maxX - 16 - 48, VIEWPORT.minY + 16),
+  ];
+
   constructor(
     private ctx: CanvasRenderingContext2D,
     private tm: TexturesManager
@@ -65,7 +72,7 @@ export class GameScreen implements IScene {
         "wasd",
         new Player(
           this.ctx,
-          new Vec2(64, 64),
+          this.spawnPos(),
           newWasdControls(),
           this.nextTrackTexture()
         )
@@ -80,7 +87,7 @@ export class GameScreen implements IScene {
         "arrows",
         new Player(
           this.ctx,
-          new Vec2(64, 64),
+          this.spawnPos(),
           newArrowControls(),
           this.nextTrackTexture()
         )
@@ -91,12 +98,16 @@ export class GameScreen implements IScene {
         id,
         new Player(
           this.ctx,
-          new Vec2(64, 64),
+          this.spawnPos(),
           newGampePadControls(id),
           this.nextTrackTexture()
         )
       );
     }
+  }
+
+  private spawnPos() {
+    return this.spawnPoses[this.players.size] || new Vec2(16, 16);
   }
 
   handleNewPlayer() {
