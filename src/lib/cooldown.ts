@@ -18,4 +18,8 @@ export class Cooldown implements IUpdateable {
   update(dt: number) {
     this.elapsed += dt;
   }
+
+  reset() {
+    this.elapsed = 0;
+  }
 }
