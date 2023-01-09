@@ -1,4 +1,4 @@
-import { clamp } from "../utils/math";
+import { clamp } from "./math";
 import { lerpVec2, Vec2 } from "./vec2";
 import type { IUpdateable } from "./interfaces/updateable";
 

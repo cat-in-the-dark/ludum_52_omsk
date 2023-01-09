@@ -1,6 +1,6 @@
+import { clamp, randomBetween, range } from "../lib/math";
 import { Rect } from "../lib/physics";
 import { Vec2 } from "../lib/vec2";
-import { clamp, randomBetween, range } from "../utils/math";
 import type { IUpdateable } from "../lib/interfaces/updateable";
 
 interface Grassinka {

@@ -2,11 +2,11 @@ import { Grass } from "../../gameobjects/grass";
 import { Player } from "../../gameobjects/player";
 import { TimerHud } from "../../gameobjects/timerHud";
 import { inputs } from "../../lib/inputs";
+import { range } from "../../lib/math";
 import { Rect, rectIsIntersect } from "../../lib/physics";
 import { IScene, sceneManager } from "../../lib/scene-manager";
 import { Timer } from "../../lib/timer";
 import { Vec2 } from "../../lib/vec2";
-import { range } from "../../utils/math";
 import {
   isArrows,
   isWASD,
