@@ -15,20 +15,20 @@ export type Dirs = "LEFT" | "RIGHT" | "UP" | "DOWN" | "";
 export class Controls implements IUpdateable {
   constructor(private mapping: Mapping, public id: string) {}
 
-  dir(): [Vec2, number, Dirs] {
+  dir(): [Vec2, Dirs] {
     if (inputs.isPressed(this.mapping.left, this.id)) {
-      return [new Vec2(-1, 0), -Math.PI, "LEFT"];
+      return [new Vec2(-1, 0), "LEFT"];
     }
     if (inputs.isPressed(this.mapping.right, this.id)) {
-      return [new Vec2(1, 0), 0, "RIGHT"];
+      return [new Vec2(1, 0), "RIGHT"];
     }
     if (inputs.isPressed(this.mapping.up, this.id)) {
-      return [new Vec2(0, -1), -Math.PI / 2, "UP"];
+      return [new Vec2(0, -1), "UP"];
     }
     if (inputs.isPressed(this.mapping.down, this.id)) {
-      return [new Vec2(0, 1), Math.PI / 2, "DOWN"];
+      return [new Vec2(0, 1), "DOWN"];
     }
-    return [new Vec2(0, 0), 0, ""];
+    return [new Vec2(0, 0), ""];
   }
   dash() {
     // TODO: it must be CLICK not pressed

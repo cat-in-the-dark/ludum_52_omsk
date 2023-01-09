@@ -1,8 +1,6 @@
+import { Timer } from "../../lib/coroutines/timer";
 import { inputs } from "../../lib/inputs";
 import { IScene, sceneManager } from "../../lib/scene-manager";
-import { Timer } from "../../lib/timer";
-import { results } from "../results-table";
-import { VIEWPORT } from "./game";
 import type { TexturesManager } from "../textures";
 
 export class ResultsScreen implements IScene {

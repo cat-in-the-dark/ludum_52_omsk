@@ -1,6 +1,6 @@
-import { VIEWPORT } from "../app/screens/game";
-import type { IUpdateable } from "../lib/interfaces/updateable";
-import type { Timer } from "../lib/timer";
+import { VIEWPORT } from "../screens/game";
+import type { Timer } from "../../lib/coroutines/timer";
+import type { IUpdateable } from "../../lib/interfaces/updateable";
 
 export class TimerHud implements IUpdateable {
   constructor(private ctx: CanvasRenderingContext2D, private timer: Timer) {}

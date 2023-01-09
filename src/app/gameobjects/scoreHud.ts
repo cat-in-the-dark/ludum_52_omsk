@@ -1,5 +1,5 @@
-import { GameScreen, VIEWPORT } from "../app/screens/game";
-import type { IUpdateable } from "../lib/interfaces/updateable";
+import { GameScreen, VIEWPORT } from "../screens/game";
+import type { IUpdateable } from "../../lib/interfaces/updateable";
 
 export class ScoreHud implements IUpdateable {
   constructor(

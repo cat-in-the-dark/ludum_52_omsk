@@ -1,11 +1,11 @@
-import { ScoreHud } from "../gameobjects/scoreHud";
 import { inputs } from "../lib/inputs";
 import { sceneManager } from "../lib/scene-manager";
+import { ScoreHud } from "./gameobjects/scoreHud";
 import { GameScreen } from "./screens/game";
 import { ResultsScreen } from "./screens/results";
 import { TitleScreen } from "./screens/title";
 import type { IUpdateable } from "../lib/interfaces/updateable";
-import type { SoundManager } from "./sound-manager";
+import type { SoundManager } from "../lib/sound-manager";
 import type { TexturesManager } from "./textures";
 
 export class App implements IUpdateable {

@@ -1,11 +1,9 @@
-import { Grass } from "../../gameobjects/grass";
-import { Player } from "../../gameobjects/player";
-import { TimerHud } from "../../gameobjects/timerHud";
+import { Timer } from "../../lib/coroutines/timer";
 import { inputs } from "../../lib/inputs";
 import { range } from "../../lib/math";
-import { Rect, rectIsIntersect } from "../../lib/physics";
+import { rectIsIntersect } from "../../lib/physics";
+import { Rect } from "../../lib/rect";
 import { IScene, sceneManager } from "../../lib/scene-manager";
-import { Timer } from "../../lib/timer";
 import { Vec2 } from "../../lib/vec2";
 import {
   isArrows,
@@ -14,6 +12,9 @@ import {
   newGampePadControls,
   newWasdControls,
 } from "../controls";
+import { Grass } from "../gameobjects/grass";
+import { Player } from "../gameobjects/player";
+import { TimerHud } from "../gameobjects/timerHud";
 import type { TexturesManager } from "../textures";
 
 export const VIEWPORT = new Rect(0, 0, 480, 480);

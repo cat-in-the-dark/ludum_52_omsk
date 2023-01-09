@@ -1,3 +1,5 @@
+import { loadImage } from "../lib/image";
+
 export type TexturesManager = {
   logo: HTMLImageElement;
   tractors: [
@@ -8,21 +10,8 @@ export type TexturesManager = {
   ];
 };
 
-async function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      resolve(img);
-    };
-    img.onerror = (ev) => {
-      reject(ev);
-    };
-  });
-}
-
 export async function setupTextures(): Promise<TexturesManager> {
-  const logo = await loadImage("logo.png");
+  const logo = await loadImage("logo_big.png");
   const trac1 = await loadImage("tractor_01.png");
   const trac2 = await loadImage("tractor_02.png");
   const trac3 = await loadImage("tractor_03.png");

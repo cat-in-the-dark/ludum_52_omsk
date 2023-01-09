@@ -7,11 +7,7 @@ export function randomBetween(left: number, right: number) {
 }
 
 export function range(begin: number, end: number): Array<number> {
-  const arr: Array<number> = [];
-  for (let i = begin; i < end; i++) {
-    arr.push(i);
-  }
-  return arr;
+  return Array.from({ length: end - begin }, (x, i) => i + begin);
 }
 
 export function lerp(begin: number, end: number, t: number) {

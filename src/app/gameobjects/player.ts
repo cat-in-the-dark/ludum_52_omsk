@@ -1,13 +1,14 @@
-import { VIEWPORT } from "../app/screens/game";
-import { Blinker } from "../lib/blinker";
-import { Cooldown } from "../lib/cooldown";
-import { easeInBack, easeOutBounce } from "../lib/easings";
-import { clampVec, Rect } from "../lib/physics";
-import { Timer } from "../lib/timer";
-import { TweenVec2 } from "../lib/tween";
-import { Vec2 } from "../lib/vec2";
-import type { Controls, Dirs } from "../app/controls";
-import type { IUpdateable } from "../lib/interfaces/updateable";
+import { Blinker } from "../../lib/coroutines/blinker";
+import { Cooldown } from "../../lib/coroutines/cooldown";
+import { Timer } from "../../lib/coroutines/timer";
+import { clampVec } from "../../lib/physics";
+import { Rect } from "../../lib/rect";
+import { easeInBack, easeOutBounce } from "../../lib/tween/easings";
+import { TweenVec2 } from "../../lib/tween/tween-vec2";
+import { Vec2 } from "../../lib/vec2";
+import { VIEWPORT } from "../screens/game";
+import type { IUpdateable } from "../../lib/interfaces/updateable";
+import type { Controls, Dirs } from "../controls";
 import type { Grass } from "./grass";
 
 function mask(a: Vec2, b: Vec2, mask: Vec2) {
@@ -19,7 +20,6 @@ export class Player implements IUpdateable {
   private speed = 128;
   private dirName: Dirs = "";
   private dir: Vec2 = new Vec2(0, 0);
-  private angle = 0;
   private dashDist = 128;
   private body: Rect = new Rect(
     4,
@@ -105,19 +105,11 @@ export class Player implements IUpdateable {
       // wait for stun
     } else {
       // just moving
-      const [dir, angle, dirName] = this.controls.dir();
+      const [dir, dirName] = this.controls.dir();
       this.pos = this.pos.add(dir.scale(dt * this.speed));
       if (dir.sqrMagnitude > 0.01) {
-        // if (this.dirName !== dirName) {
-        //   // direction was changed
-        //   this.pos = new Vec2(
-        //     roundCell(this.pos.x, 32),
-        //     roundCell(this.pos.y, 32)
-        //   );
-        // }
         this.dirName = dirName;
         this.dir = dir; // save direction
-        this.angle = angle;
       }
 
       this.blinker.stop();

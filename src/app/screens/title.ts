@@ -1,4 +1,4 @@
-import { Cooldown } from "../../lib/cooldown";
+import { Cooldown } from "../../lib/coroutines/cooldown";
 import { inputs } from "../../lib/inputs";
 import { IScene, sceneManager } from "../../lib/scene-manager";
 import type { TexturesManager } from "../textures";
@@ -15,9 +15,9 @@ export class TitleScreen implements IScene {
     this.timer.reset();
   }
   update(dt: number): void {
-    this.ctx.fillStyle = "black";
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.ctx.save();
     this.ctx.drawImage(this.tm.logo, 0, 0);
+    this.ctx.restore();
 
     if (inputs.anyPressed() || this.timer.invoke()) {
       sceneManager.set("game");
